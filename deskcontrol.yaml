@@ -1,0 +1,156 @@
+esphome:
+  name: deskcontrol
+  friendly_name: DeskControl
+  includes:
+    - desk.h  
+
+esp32:
+  board: esp32-s3-devkitc-1
+  framework:
+    type: arduino
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: "use your own"
+
+ota:
+  password: "otapassword"
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Deskcontrol Fallback Hotspot"
+    password: "fallback"
+
+captive_portal:
+    
+
+uart:
+  - id: desk_uart
+    tx_pin: 17  
+    rx_pin: 18
+    baud_rate: 9600
+    debug:
+      direction: BOTH
+      after:
+        bytes: 9
+      sequence:     
+        - lambda: UARTDebug::log_int(direction, bytes, ',');
+
+custom_component:
+- lambda: |-
+    auto my_custom = new MyCustomComponent(id(desk_uart));
+    return {my_custom};
+
+
+sensor:
+  - platform: template
+    name: "Desk M1 Height"
+    id: "deskm1"
+    filters:
+    - lambda: !lambda |-
+        if (x <1 ) return {};
+        return x/10;
+  - platform: template
+    name: "Desk M2 Height"
+    id: "deskm2"
+    filters:
+    - lambda: !lambda |-
+        if (x <1 ) return {};
+        return x/10;
+  - platform: template
+    name: "Desk M3 Height"
+    id: "deskm3"
+    filters:
+    - lambda: !lambda |-
+        if (x <1 ) return {};
+        return x/10;
+  - platform: template
+    name: "Desk M4 Height"
+    id: "deskm4"
+    filters:
+    - lambda: !lambda |-
+        if (x <1 ) return {};
+        return x/10;                        
+
+
+button:
+  - platform: template
+    name: Desk UP
+    id: my_deskup
+    on_press:
+      then:
+        - logger.log: UP Pressed
+        - uart.write: [0xf1, 0xf1, 0x01,0x00,0x01,0x7e]
+  - platform: template
+    name: Desk Down
+    id: my_deskdown
+    on_press:
+      then:
+        - logger.log: DOWN Pressed
+        - uart.write: [0xf1, 0xf1, 0x02,0x00,0x02,0x7e]      
+  - platform: template
+    name: Desk Sit
+    id: my_desksit
+    on_press:
+      then:
+        - logger.log: SIT Pressed
+        - uart.write: [0xf1, 0xf1, 0x05,0x00,0x05,0x7e]            
+  - platform: template
+    name: Desk Stand
+    id: my_deskstamd
+    on_press:
+      then:
+        - logger.log: STAND Pressed
+        - uart.write: [0xf1, 0xf1, 0x06,0x00,0x06,0x7e]  
+  - platform: template
+    name: Desk FULLUP
+    id: my_deskfullup
+    on_press:
+      then:
+        - logger.log: FULLUP Pressed
+        - uart.write: [0xf1, 0xf1, 0x28,0x00,0x28,0x7e]          
+  - platform: template
+    name: Desk test
+    id: my_desktest
+    on_press:
+      then:
+        - logger.log: TEST Pressed
+        - uart.write: [0xf1, 0xf1, 0x07,0x00,0x07,0x7e,0xf1, 0xf1, 0x08,0x00,0x08,0x7e,0xf1, 0xf1, 0x09,0x00,0x09,0x7e,0xf1, 0xf1, 0x0c,0x00,0x0c,0x7e,0xf1, 0xf1, 0x0e,0x00,0x0e,0x7e]                   
+  - platform: template
+    name: Desk X
+    id: my_deskX
+    on_press:
+      then:
+        - logger.log: X Pressed
+        - uart.write: [0xf1, 0xf1, 0x80, 0x02, 2,179,55,0x7e]
+  - platform: template
+    name: Desk Y
+    id: my_deskY
+    on_press:
+      then:
+        - logger.log: Y Pressed
+        - uart.write: [0xf1, 0xf1, 0x1b, 0x00, 0x1b,0x7e]   
+
+number:               
+  - platform: template
+    name: "Desk Height Control"
+    id: "deskSlider"
+    step: 1
+    min_value: 677
+    max_value: 1241
+    mode: slider            
+    set_action:
+      then:
+        - uart.write: !lambda |-
+            int a= (int(x) & 0xff);
+            int b= ((int(x) >> 8) & 0xff);
+            int c= (a+b+0x80+0x02) & 0xff;
+            return {0xf1, 0xf1, 0x80, 2, b,a,c,0x7e,0xf1, 0xf1, 0x1b, 0x00, 0x1b,0x7e};        
