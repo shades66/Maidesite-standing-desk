@@ -65,7 +65,7 @@ Mosfets used to control the motors NCE603583
 Processor used HC32L130  32bit ARM® Cortex®-M0+ .   
      image : https://github.com/shades66/Maidesite-standing-desk/blob/main/maidesite-handset-cpu.jpg
 
-Current sensor? 
+Current sensor?  A LM358A by 3PEAK by the looks.    I guess measuring for load over the 2 large 150 resistors for the sensor if something is blocking the desk + maybe even for motor issues?
      image: https://github.com/shades66/Maidesite-standing-desk/blob/main/maidesite-handset-currentsensororamp.jpg
 
     
