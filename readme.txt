@@ -52,3 +52,8 @@ BLACK/GND ------------------------- GND
    4   5v  - low current,  not enough to drive a ESP32 
    5   RXD - Into the handset  PA03 on processor
    6   Unused on BT.   connects to PA14/TXD/SWCLK on processor.   not tried anything with this
+
+
+Other odds & ends
+
+Mosfets used to control the motors NCE603583   http://www.ncepower.com/upload/cn/propdf/NCE603583.pdf
