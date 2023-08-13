@@ -108,10 +108,10 @@ Processor used HC32L130  32bit ARM® Cortex®-M0+ .    HC32L136J8TA-LQ48
       Unknown - Track going under processor near U4 silkscreen
               - This looks to go to R4/R8 between the mosfets.  Maybe a temperature sensor to detect overheating ?
 
-      PB01  -
-      PB00  -
-      PA07  -
-      PA06  -
+      PB01  - Left Leg  Motor Signal 2
+      PB00  - Right Leg  Motor Signal 1
+      PA07  - Left Leg  Motor Signal 1
+      PA06  - Right Leg  Motor Signal 2
             -   These pins connect to the sensors in the motors. Possible optical encoders as the sockets provide a GND & 5V connection too?
 
 
