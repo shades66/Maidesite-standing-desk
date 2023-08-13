@@ -67,6 +67,10 @@ J3  - Connector to front keypad (not really looked at this part of the board)
 
 Other odds & ends
 
+Motors :   JXET-18-50
+          input:  DC24V 5A 120W
+        https://www.reddit.com/media?url=https%3A%2F%2Fpreview.redd.it%2Frwye4gc3shk81.png%3Fwidth%3D4032%26format%3Dpng%26auto%3Dwebp%26s%3D7e5ffd4c4db3439ee0d53be7d9f2ef88d9a3b4a0
+
 DdX components all over the board.  Appear to be BAV99 A7 SOT23 Hottech ESD Protection based on A7 marking and how they are connected
     See : https://www.sunrom.com/p/bav99-a7-sot23-hottech-esd-protection-of-io-pins
     
