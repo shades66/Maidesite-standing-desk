@@ -55,17 +55,73 @@ BLACK/GND ------------------------- GND
 
 see https://github.com/shades66/Maidesite-standing-desk/blob/main/maidesite-back-handset.jpg for this & motor pinouts
 
+J3  - Connector to front keypad (not really looked at this part of the board)
+  Assuming Pin 1 next to J3 silkscreen
+  Pin 1  -  GND from L3/U3 Buck Converter area
+  Pin 2  -  VCC 5v?  from L3/U3 Buck Converter area
+  Pin 3  - 
+  Pin 4  -
+  Pin 5  - 
+  Pin 6  -
+  Pin 7  -
+
 Other odds & ends
 
+DdX components all over the board.  Appear to be BAV99 A7 SOT23 Hottech ESD Protection based on A7 marking and how they are connected
+    See : https://www.sunrom.com/p/bav99-a7-sot23-hottech-esd-protection-of-io-pins
+    
 Mosfets used to control the motors NCE603583   
     Source PDF: http://www.ncepower.com/upload/cn/propdf/NCE603583.pdf
     Backup https://github.com/shades66/Maidesite-standing-desk/blob/main/NCE603583.pdf
     Image : https://github.com/shades66/Maidesite-standing-desk/blob/main/maidesite-handset-mosfets.jpg
 
-Processor used HC32L130  32bit ARM® Cortex®-M0+ .   
+Processor used HC32L130  32bit ARM® Cortex®-M0+ .    HC32L136J8TA-LQ48
      image : https://github.com/shades66/Maidesite-standing-desk/blob/main/maidesite-handset-cpu.jpg
+     link: https://www.keil.arm.com/devices/hdsc-hc32l130j8ta/features/
+        not found an english PDF but pinout & basics can be worked out on document linked here https://jlcpcb.com/partdetail/Xhsc-HC32L136J8TALQ48/C779473
+
+      PA13 - Pin 1 Bluetooth RJ12 Connector
+      PA14 - Pin 6 Bluetooth RJ12 connector
+      PA04 - Serial TO Bluetooth RJ12 Connector
+      PA03 - Serial FROM Bluetooth RJ12 Connector
+
+      PA10 - Q9 (LeftLeg) - Ground ENABLE Gate  Motor Pin 1
+      PA08 - Q10 (LeftLeg)  -Ground ENABLE Gate  Motor Pin 2
+      PB14 - Q7 (RightLeg)  - Ground ENABLE Gate  Motor Pin 1
+      PB13 - Q8 (RightLeg)  - Ground ENABLE Gate  Motor Pin 2
+
+      PB10  - From LM358
+      PB02  - FROM LM358
+
+      PB04  - Child Lock Button
+
+      PA15  -  +V GATE ENABLE
+      PB03  -  +V GATE ENABLE
+            - not worked out this part fully.    Seems we have 2 signals into Q6. Guessing a dual transistor/fet ? which allow the following 2 selections
+                Q8 (RightLeg)  +  Q10 (LeftLeg)   +V Enable Gate  Motor Pin 2
+                Q7 (RightLeg)  +  Q9 (LeftLeg)    +V Enable Gate  Motor Pin 1
+
+      Unknown - Track going under processor near U4 silkscreen
+              - This looks to go to R4/R8 between the mosfets.  Maybe a temperature sensor to detect overheating ?
+
+      PB01  -
+      PB00  -
+      PA07  -
+      PA06  -
+            -   These pins connect to the sensors in the motors. Possible optical encoders as the sockets provide a GND & 5V connection too?
+
+
+      + various others.  Mostly to the keypad so as others have found a mix of GPIO's for the UP/DOWN + other buttons as well as the serial connection to (and from?) the display.
+        Also spitted some go to the power supply section.    Monitoring or control !??
+
 
 Current sensor?  A LM358A by 3PEAK by the looks.    I guess measuring for load over the 2 large 150 resistors for the sensor if something is blocking the desk + maybe even for motor issues?
      image: https://github.com/shades66/Maidesite-standing-desk/blob/main/maidesite-handset-currentsensororamp.jpg
 
-    
+Power supplies.
+      24V IN (I think) + Some filterting to the Mosfets for driving the motors
+
+      Small Buck converter  (U1 & L1)  -  Appears to be for the 5v across the board
+      Large Buck converter (U3 + L3)   -  To the button panel.  Power for USB Connector + components on the button board?
+      Temperature sensor connects via Q1,  Maybe a voltage reference for accurate temperatore measurement?
+
