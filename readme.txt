@@ -53,7 +53,19 @@ BLACK/GND ------------------------- GND
    5   RXD - Into the handset  PA03 on processor
    6   Unused on BT.   connects to PA14/TXD/SWCLK on processor.   not tried anything with this
 
+see https://github.com/shades66/Maidesite-standing-desk/blob/main/maidesite-back-handset.jpg for this & motor pinouts
 
 Other odds & ends
 
-Mosfets used to control the motors NCE603583   http://www.ncepower.com/upload/cn/propdf/NCE603583.pdf
+Mosfets used to control the motors NCE603583   
+    Source PDF: http://www.ncepower.com/upload/cn/propdf/NCE603583.pdf
+    Backup https://github.com/shades66/Maidesite-standing-desk/blob/main/NCE603583.pdf
+    Image : https://github.com/shades66/Maidesite-standing-desk/blob/main/maidesite-handset-mosfets.jpg
+
+Processor used HC32L130  32bit ARM® Cortex®-M0+ .   
+     image : https://github.com/shades66/Maidesite-standing-desk/blob/main/maidesite-handset-cpu.jpg
+
+Current sensor? 
+     image: https://github.com/shades66/Maidesite-standing-desk/blob/main/maidesite-handset-currentsensororamp.jpg
+
+    
