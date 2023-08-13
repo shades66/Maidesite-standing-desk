@@ -3,6 +3,10 @@ esphome:
   friendly_name: DeskControl
   includes:
     - desk.h  
+  on_boot:
+    priority: 800
+    then:
+      - uart.write: [0xf1, 0xf1, 0x07,0x00,0x07,0x7e,0xf1, 0xf1, 0x08,0x00,0x08,0x7e,0xf1, 0xf1, 0x09,0x00,0x09,0x7e,0xf1, 0xf1, 0x0c,0x00,0x0c,0x7e,0xf1, 0xf1, 0x0e,0x00,0x0e,0x7e]
 
 esp32:
   board: esp32-s3-devkitc-1
@@ -15,10 +19,10 @@ logger:
 # Enable Home Assistant API
 api:
   encryption:
-    key: "use your own"
+    key: "kkkkkkkkkkkkkkkkkkkk="
 
 ota:
-  password: "otapassword"
+  password: "kkkkkkkkkkkkkkkkkkkkkkk"
 
 wifi:
   ssid: !secret wifi_ssid
@@ -27,7 +31,7 @@ wifi:
   # Enable fallback hotspot (captive portal) in case wifi connection fails
   ap:
     ssid: "Deskcontrol Fallback Hotspot"
-    password: "fallback"
+    password: "fopfxEuvlxy3"
 
 captive_portal:
     
@@ -80,41 +84,94 @@ sensor:
         if (x <1 ) return {};
         return x/10;                        
 
+text_sensor:
+  - platform: homeassistant
+    id: movement_status
+    entity_id: binary_sensor.presence
+ 
+
+switch:
+  - platform: template
+    name: "Desk Enable"
+    id: deskenable
+    lambda: |-
+      if (id(movement_status).state == "on") {
+        return true;
+      } else {
+        return false;
+      }
+    turn_on_action:
+      - logger.log: Desk Enabled
+    on_turn_on:      
+      - logger.log: Desk Enabled
+    on_turn_off:
+      - logger.log: Desk Disabled
+      - delay: 100s
+      - if:
+         condition: 
+            text_sensor.state:
+              id: movement_status
+              state: "off"
+         then:
+            - logger.log: Reset Desk to lowest setting.
+            - uart.write: [0xf1, 0xf1, 0x05,0x00,0x05,0x7e]     
+
+
 
 button:
   - platform: template
     name: Desk UP
     id: my_deskup
     on_press:
-      then:
+      if:
+        condition:
+      # Same syntax for is_off
+          switch.is_on: deskenable      
+        then:
         - logger.log: UP Pressed
         - uart.write: [0xf1, 0xf1, 0x01,0x00,0x01,0x7e]
   - platform: template
     name: Desk Down
     id: my_deskdown
     on_press:
-      then:
+      if:
+        condition:
+      # Same syntax for is_off
+          switch.is_on: deskenable            
+        then:
         - logger.log: DOWN Pressed
         - uart.write: [0xf1, 0xf1, 0x02,0x00,0x02,0x7e]      
   - platform: template
     name: Desk Sit
     id: my_desksit
     on_press:
-      then:
+      if:
+        condition:
+      # Same syntax for is_off
+          switch.is_on: deskenable            
+        then:
         - logger.log: SIT Pressed
         - uart.write: [0xf1, 0xf1, 0x05,0x00,0x05,0x7e]            
   - platform: template
     name: Desk Stand
     id: my_deskstamd
     on_press:
-      then:
+      if:
+        condition:
+      # Same syntax for is_off
+          switch.is_on: deskenable            
+        then:
         - logger.log: STAND Pressed
         - uart.write: [0xf1, 0xf1, 0x06,0x00,0x06,0x7e]  
   - platform: template
     name: Desk FULLUP
     id: my_deskfullup
     on_press:
-      then:
+      if:
+        condition:
+      # Same syntax for is_off
+          switch.is_on: deskenable            
+        then:
         - logger.log: FULLUP Pressed
         - uart.write: [0xf1, 0xf1, 0x28,0x00,0x28,0x7e]          
   - platform: template
@@ -124,20 +181,7 @@ button:
       then:
         - logger.log: TEST Pressed
         - uart.write: [0xf1, 0xf1, 0x07,0x00,0x07,0x7e,0xf1, 0xf1, 0x08,0x00,0x08,0x7e,0xf1, 0xf1, 0x09,0x00,0x09,0x7e,0xf1, 0xf1, 0x0c,0x00,0x0c,0x7e,0xf1, 0xf1, 0x0e,0x00,0x0e,0x7e]                   
-  - platform: template
-    name: Desk X
-    id: my_deskX
-    on_press:
-      then:
-        - logger.log: X Pressed
-        - uart.write: [0xf1, 0xf1, 0x80, 0x02, 2,179,55,0x7e]
-  - platform: template
-    name: Desk Y
-    id: my_deskY
-    on_press:
-      then:
-        - logger.log: Y Pressed
-        - uart.write: [0xf1, 0xf1, 0x1b, 0x00, 0x1b,0x7e]   
+
 
 number:               
   - platform: template
@@ -148,7 +192,11 @@ number:
     max_value: 1241
     mode: slider            
     set_action:
-      then:
+      if:
+        condition:
+      # Same syntax for is_off
+          switch.is_on: deskenable            
+        then:
         - uart.write: !lambda |-
             int a= (int(x) & 0xff);
             int b= ((int(x) >> 8) & 0xff);
